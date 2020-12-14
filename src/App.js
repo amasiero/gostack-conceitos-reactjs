@@ -6,6 +6,10 @@ import './styles.css';
 function App() {
 	const [repositories, setRepositories] = useState([]);
 
+	useEffect(() => {
+		api.get('repositories').then((response) => setRepositories(response.data));
+	}, []);
+
 	async function handleAddRepository() {
 		const response = await api.post('repositories', {
 			title: `Novo Repo ${Date.now()}`,
@@ -20,11 +24,9 @@ function App() {
 
 	async function handleRemoveRepository(id) {
 		await api.delete(`repositories/${id}`);
-	}
 
-	useEffect(() => {
-		api.get('repositories').then((response) => setRepositories(response.data));
-	});
+		setRepositories(repositories.filter((repository) => repository.id !== id));
+	}
 
 	return (
 		<div>
